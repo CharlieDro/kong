@@ -12,6 +12,7 @@ local balancers = require "kong.runloop.balancer.balancers"
 local dns_utils = require "kong.resty.dns.utils"
 
 local ngx = ngx
+local ctx = ngx.ctx
 local null = ngx.null
 local ngx_now = ngx.now
 local log = ngx.log
@@ -490,7 +491,7 @@ function queryDns(target, cacheOnly)
   startTime = os.clock()
   local newQuery, err, try_list = dns_client.resolve(target.name, nil, cacheOnly)
   local dns_resolution_time = os.clock() - startTime
-  -- ngx.ctx.<var> = dns_resolution_time
+  ctx.KONG_DNS_LATENCY = dns_resolution_time
 
   if err then
     log(WARN, "querying dns for ", target.name,
