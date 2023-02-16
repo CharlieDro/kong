@@ -486,7 +486,11 @@ function queryDns(target, cacheOnly)
   -- Note: the other place we may yield would be the callbacks, who's content
   -- we do not control, hence they are executed delayed, to ascertain
   -- atomicity.
+  
+  startTime = os.clock()
   local newQuery, err, try_list = dns_client.resolve(target.name, nil, cacheOnly)
+  local dns_resolution_time = os.clock() - startTime
+  -- ngx.ctx.<var> = dns_resolution_time
 
   if err then
     log(WARN, "querying dns for ", target.name,
