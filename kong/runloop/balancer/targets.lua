@@ -488,9 +488,9 @@ function queryDns(target, cacheOnly)
   -- we do not control, hence they are executed delayed, to ascertain
   -- atomicity.
   
-  startTime = os.clock()
+  local startTime = ngx.time()
   local newQuery, err, try_list = dns_client.resolve(target.name, nil, cacheOnly)
-  local dns_resolution_time = os.clock() - startTime
+  local dns_resolution_time = ngx.time() - startTime
   ctx.KONG_DNS_LATENCY = dns_resolution_time
 
   if err then
